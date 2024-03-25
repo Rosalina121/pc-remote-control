@@ -40,9 +40,20 @@ async function loadClasses(dir: string): Promise<{ module: IModule }[]> {
 function routePathname(url: any, classes: { module: IModule }[]) {
     const result = classes.filter((p) => url.pathname === p.module.path);
     if (result[0]) {
-        return new Response(result[0].module.fn());
+        const res = result[0].module.fn();
+        console.log(
+            ` 🖥️  ${new Date().toISOString()} ✅ Invoked: ${
+                url.pathname
+            } - ${res}`
+        );
+        return new Response(res);
     } else {
-        return new Response("404");     // TODO: make it an actual 404
+        console.log(
+            ` 🖥️  ${new Date().toISOString()} ❌ Invoked: ${
+                url.pathname
+            } - Path does not exist `
+        );
+        return new Response("404"); // TODO: make it an actual 404
     }
 }
 
@@ -56,7 +67,6 @@ async function main() {
         fetch(req) {
             const url = new URL(req.url);
             const res = routePathname(url, classes);
-            console.log(` 🖥️  ${new Date().toISOString()} Invoked: ${url.pathname}`)
             return res;
         },
     });
