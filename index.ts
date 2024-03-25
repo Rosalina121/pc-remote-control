@@ -55,7 +55,9 @@ async function main() {
         port: 3000,
         fetch(req) {
             const url = new URL(req.url);
-            return routePathname(url, classes);
+            const res = routePathname(url, classes);
+            console.log(` 🖥️  ${new Date().toISOString()} Invoked: ${url.pathname}`)
+            return res;
         },
     });
 
