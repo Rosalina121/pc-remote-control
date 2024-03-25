@@ -2,6 +2,7 @@ import type { IModule } from "../interfaces/IModule";
 import {keyboard, Key} from '@nut-tree/nut-js';
 
 class Mute implements IModule {
+    name = "Mute"
     path = "/mute";
 
     fn(): string {

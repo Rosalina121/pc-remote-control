@@ -19,8 +19,12 @@ async function loadClasses(dir: string): Promise<{ module: IModule }[]> {
             classes.push(importedModule);
         }
     }
-    console.log(` 🖥️  Loaded\x1b[92m${classes.length}\x1b[0m modules on paths:`);
-    console.log(` 🖥️  "${classes.map((c) => c.module.path).join(`", "`)}"`);
+    console.log(` 🖥️  Loaded\x1b[92m${classes.length}\x1b[0m modules:`);
+    console.log(
+        ` 🖥️ \x1b[94m${classes
+            .map((c) => c.module.name)
+            .join(`\x1b[0m, \x1b[94m`)}\x1b[0m`
+    );
 
     return classes;
 }
@@ -35,10 +39,10 @@ async function loadClasses(dir: string): Promise<{ module: IModule }[]> {
  */
 function routePathname(url: any, classes: { module: IModule }[]) {
     const result = classes.filter((p) => url.pathname === p.module.path);
-    if (result) {
-        return new Response(result[0]?.module.fn());
+    if (result[0]) {
+        return new Response(result[0].module.fn());
     } else {
-        return new Response("404");
+        return new Response("404");     // TODO: make it an actual 404
     }
 }
 

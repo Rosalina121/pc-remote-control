@@ -1,6 +1,7 @@
 import type { IModule } from "../interfaces/IModule";
 
 class Ping implements IModule {
+    name = "Ping"
     path = "/";
 
     fn(): string {
