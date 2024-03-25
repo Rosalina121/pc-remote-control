@@ -8,8 +8,9 @@ class Mute implements IModule {
     fn(): string {
         // My Discord mute bind
         // TODO: just mute the device, NirCMD?
+        // If Discord specific, perhaps some kind of local API to get the current mic status
         keyboard.type(Key.LeftControl, Key.Backslash);
-        return "Mute!";
+        return "Muted!";
     }
 }
 

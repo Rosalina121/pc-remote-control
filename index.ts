@@ -21,7 +21,7 @@ async function loadClasses(dir: string): Promise<{ module: IModule }[]> {
     }
     console.log(` 🖥️  Loaded\x1b[92m${classes.length}\x1b[0m modules:`);
     console.log(
-        ` 🖥️ \x1b[94m${classes
+        `     \x1b[94m${classes
             .map((c) => c.module.name)
             .join(`\x1b[0m, \x1b[94m`)}\x1b[0m`
     );
@@ -39,22 +39,14 @@ async function loadClasses(dir: string): Promise<{ module: IModule }[]> {
  */
 function routePathname(url: any, classes: { module: IModule }[]) {
     const result = classes.filter((p) => url.pathname === p.module.path);
-    if (result[0]) {
-        const res = result[0].module.fn();
-        console.log(
-            ` 🖥️  ${new Date().toISOString()} ✅ Invoked: ${
-                url.pathname
-            } - ${res}`
-        );
-        return new Response(res);
-    } else {
-        console.log(
-            ` 🖥️  ${new Date().toISOString()} ❌ Invoked: ${
-                url.pathname
-            } - Path does not exist `
-        );
-        return new Response("404"); // TODO: make it an actual 404
-    }
+    let res = result[0]?.module.fn();
+    if (!res) res = "❌ response is empty or path not found"
+    console.log(
+        ` 🖥️  ${new Date().toISOString()} Invoked:\x1b[34m${url.pathname}\x1b[0m - ${
+            res
+        }`
+    );
+    return new Response(res);
 }
 
 async function main() {
