@@ -44,12 +44,16 @@ async function main() {
         const requestedModule = classes.filter((p) => path === p.module.path);
         if (requestedModule[0]) {
             const moduleResult = requestedModule[0].module.fn(req.query); // Query Params validation is a module responsibility
-            
-            console.log(` 🖥️  Invoked: /wish/${path} - ${moduleResult.response}`);
-            
-            res.send(moduleResult.response).status(moduleResult.status); 
+
+            console.log(
+                ` 🖥️  Invoked: /wish/${path} - ${moduleResult.response}`
+            );  // TODO: color based on status code
+
+            res.send(moduleResult.response).status(moduleResult.status);
         } else {
-            console.log(` 🖥️ \x1b[31mModule on path: /wish/${path} not found.\x1b[0m`)
+            console.log(
+                ` 🖥️ \x1b[31mModule on path: /wish/${path} not found.\x1b[0m`
+            );
             res.send("Requested module not found").status(404);
         }
     });
