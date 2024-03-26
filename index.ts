@@ -41,6 +41,7 @@ async function main() {
 
     const app = express();
     const port = 3000;
+    const host = "0.0.0.0"
 
     app.get("/wish/:path", (req, res) => {
         const path = req.params.path;
@@ -50,7 +51,7 @@ async function main() {
 
             console.log(
                 ` 🖥️  Invoked: /wish/${path} - ${moduleResult.response}`
-            );  // TODO: color based on status code
+            ); // TODO: color based on status code
 
             res.send(moduleResult.response).status(moduleResult.status);
         } else {
@@ -61,8 +62,8 @@ async function main() {
         }
     });
 
-    app.listen(port, () => {
-        console.log(` 🖥️  Listening on http://localhost:${port} ...`);  // TODO: Move the PC emoji to like a general function, like log() or sth
+    app.listen(port, host, () => {
+        console.log(` 🖥️  Listening on http://localhost:${port} ...`); // TODO: Move the PC emoji to like a general function, like log() or sth
     });
 }
 

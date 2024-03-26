@@ -10,6 +10,7 @@ import type { IModuleResponse } from "../interfaces/IModuleResponse";
  *  - /wish/shutdown
  *  - /wish/shutdown?abort
  *  - /wish/shutdown?timeout=20
+ *  - /wish/shutdown?timeout=0&reboot
  */
 class Shutdown implements IModule {
     name = "Shutdown";
@@ -17,28 +18,29 @@ class Shutdown implements IModule {
 
     fn(queryParams: any): IModuleResponse {
         const abort = queryParams?.abort === ""; // empty param
+        const reboot = queryParams?.reboot === ""; // empty param
         const timeout = queryParams?.timeout ?? "60";
-        if (abort) {
-            try {
+
+        try {
+            if (abort) {
                 Bun.spawn(["nircmd", "abortshutdown"]);
                 return { response: "Shutdown aborted.", status: 200 };
-            } catch (e) {
-                const error = `Error performing "${this.path}": NirCMD is probably not installed.`;
-                return { response: error, status: 500 };
-            }
-        } else {
-            try {
+            } else {
                 Bun.spawn([
                     "nircmd",
                     "initshutdown",
-                    `Shutdown in ${timeout} seconds.`,
+                    `${reboot ? "Reboot" : "Shutdown"} in ${timeout} seconds.`,
                     timeout,
+                    reboot ?? "",
                 ]);
-                return { response: "Shutdown initiated.", status: 200 };
-            } catch (e) {
-                const error = `Error performing "${this.path}": NirCMD is probably not installed.`;
-                return { response: error, status: 500 };
+                return {
+                    response: `${reboot ? "Reboot" : "Shutdown"} initiated.`,
+                    status: 200,
+                };
             }
+        } catch (e) {
+            const error = `Error performing "${this.path}": NirCMD is probably not installed.`;
+            return { response: error, status: 500 };
         }
     }
 }
