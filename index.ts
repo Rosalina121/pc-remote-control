@@ -68,7 +68,7 @@ async function main() {
 
             res.send(moduleResult.response).status(moduleResult.status);
         } else {
-            log(`❌\x1b[31mModule on path: /wish/${path} not found.\x1b[0m`);
+            log(`❌\x1b[31mModule on path: \x1b[91m/wish/${path}\x1b[31m not found.\x1b[0m`);
             res.send("Requested module not found").status(404);
         }
     });
