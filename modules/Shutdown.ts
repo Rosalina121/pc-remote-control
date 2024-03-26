@@ -1,17 +1,17 @@
 import type { IModule } from "../interfaces/IModule";
+import type { IModuleResponse } from "../interfaces/IModuleResponse";
 
 class Shutdown implements IModule {
     name = "Shutdown"
-    path = "/shutdown";
+    path = "shutdown";
 
-    fn(): string {
+    fn(): IModuleResponse {
         try {
-            Bun.spawn(['echo', 'initshutdown', 'Shutdown initiated!', '60', 'reboot'])
-            return "Shutdown initiated.";
+            Bun.spawn(['nircmd', 'initshutdown', 'Shutdown initiated!', '60', 'reboot'])
+            return {response:"Shutdown initiated.",status:200};
         } catch (e) {
             const error = `Error performing "${this.path}": NirCMD is probably not installed.`
-            console.log(` 🖥️ \x1b[31m${error}\x1b[0m`)
-            return error;
+            return {response: error, status: 500};
         }
     }
 }

@@ -1,11 +1,12 @@
 import type { IModule } from "../interfaces/IModule";
+import type { IModuleResponse } from "../interfaces/IModuleResponse";
 
 class Ping implements IModule {
     name = "Ping"
-    path = "/";
+    path = "ping";
 
-    fn(): string {
-        return "Pong!";
+    fn(): IModuleResponse {
+        return {response:"Pong!",status:200};
     }
 }
 

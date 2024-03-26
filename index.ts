@@ -1,6 +1,9 @@
 import type { IModule } from "./interfaces/IModule";
+
 import { promises as fs } from "fs";
 import path from "path";
+
+import express from "express";
 
 /**
  * Loads modules from provided directory.
@@ -29,41 +32,31 @@ async function loadClasses(dir: string): Promise<{ module: IModule }[]> {
     return classes;
 }
 
-/**
- * Checks which path was invoked and runs a method from the corresponding
- * instance of a loaded class.
- *
- * @param url - url of the request
- * @param classes - loaded instances of modules
- * @returns response from the invoked module
- */
-function routePathname(url: any, classes: { module: IModule }[]) {
-    const result = classes.filter((p) => url.pathname === p.module.path);
-    let res = result[0]?.module.fn();
-    if (!res) res = "❌ response is empty or path not found"
-    console.log(
-        ` 🖥️  ${new Date().toISOString()} Invoked:\x1b[34m${url.pathname}\x1b[0m - ${
-            res
-        }`
-    );
-    return new Response(res);
-}
-
 async function main() {
     const dir = path.resolve("./modules");
     const classes = await loadClasses(dir);
 
-    const server = Bun.serve({
-        hostname: "0.0.0.0",
-        port: 3000,
-        fetch(req) {
-            const url = new URL(req.url);
-            const res = routePathname(url, classes);
-            return res;
-        },
+    const app = express();
+    const port = 3000;
+
+    app.get("/wish/:path", (req, res) => {
+        const path = req.params.path;
+        const requestedModule = classes.filter((p) => path === p.module.path);
+        if (requestedModule[0]) {
+            const moduleResult = requestedModule[0].module.fn(req.query); // Query Params validation is a module responsibility
+            
+            console.log(` 🖥️  Invoked: /wish/${path} - ${moduleResult.response}`);
+            
+            res.send(moduleResult.response).status(moduleResult.status); 
+        } else {
+            console.log(` 🖥️ \x1b[31mModule on path: /wish/${path} not found.\x1b[0m`)
+            res.send("Requested module not found").status(404);
+        }
     });
 
-    console.log(` 🖥️  Listening on http://localhost:${server.port}`);
+    app.listen(port, () => {
+        console.log(` 🖥️  Listening on http://localhost:${port} ...`);
+    });
 }
 
 main();
