@@ -32,6 +32,9 @@ async function loadClasses(dir: string): Promise<{ module: IModule }[]> {
     return classes;
 }
 
+/**
+ * Main function. Runs the Express server and handles requests and response formatting in the console
+ */
 async function main() {
     const dir = path.resolve("./modules");
     const classes = await loadClasses(dir);
@@ -59,7 +62,7 @@ async function main() {
     });
 
     app.listen(port, () => {
-        console.log(` 🖥️  Listening on http://localhost:${port} ...`);
+        console.log(` 🖥️  Listening on http://localhost:${port} ...`);  // TODO: Move the PC emoji to like a general function, like log() or sth
     });
 }
 

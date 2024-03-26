@@ -2,7 +2,11 @@ import type { IModule } from "../interfaces/IModule";
 import type { IModuleResponse } from "../interfaces/IModuleResponse";
 
 /**
- * Query params: value - [0, 100] value to set the sys volume to
+ * Query params: 
+ *  - value - `[0, 100]` value to set the sys volume to
+ * 
+ * Example:
+ *  - /wish/volume?value=50
  */
 class Volume implements IModule {
     name = "Volume";
