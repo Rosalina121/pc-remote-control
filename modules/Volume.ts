@@ -51,7 +51,7 @@ function handleGET(request: moduleReq): IModuleResponse {
         Bun.spawn(["nircmd", "setsysvolume", calculatedVolume.toString()]);
         return { response: `Volume changed to ${vol}.`, status: 200 };
     } catch (e) {
-        const error = `Error performing "${this.path}": NirCMD is probably not installed.`;
+        const error = `Error. NirCMD is probably not installed.`;
         return { response: error, status: 500 };
     }
 }
