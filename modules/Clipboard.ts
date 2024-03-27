@@ -3,11 +3,15 @@ import type { IModuleResponse } from "../interfaces/IModuleResponse";
 import clipboard from "clipboardy";
 
 /**
- * Query params:
- *  - value - string value of clipboard text
+ * GET:
+ *  - value - `string` value of clipboard text
+ * 
+ * POST:
+ *  - file - actual file to be saved (via Form)
  *
  * Example:
  *  - /wish/clipboard?value=i%20like%20trains
+ *  - /wish/clipboard Form: file: actual_file_here
  */
 class Clipboard implements IModule {
     emoji = "📎";
@@ -17,10 +21,7 @@ class Clipboard implements IModule {
     fn(request?: moduleReq): IModuleResponse {
         switch (request?.method) {
             case "POST":
-                return {
-                    response: `POST not implemented yet.`,
-                    status: 501,
-                };
+                return handlePOST(request);
             case "GET":
                 return handleGET(request);
             default:
@@ -43,6 +44,19 @@ function handleGET(request: moduleReq) {
             status: 400,
         };
     }
+}
+
+function handlePOST(request: moduleReq) {
+    if (request?.file) {
+        return {
+            response: `Got file ${request.file.originalname}`,
+            status: 200,
+        };
+    }
+    return {
+        response: `POST requires a file.`,
+        status: 400,
+    };
 }
 
 export const module = new Clipboard();

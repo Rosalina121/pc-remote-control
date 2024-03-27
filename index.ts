@@ -1,11 +1,12 @@
-import type { IModule } from "./interfaces/IModule";
+import type { IModule, moduleReq } from "./interfaces/IModule";
 
 import { promises as fs } from "fs";
 import path from "path";
 
 import express from "express";
-import type { Request, Response } from "express-serve-static-core";
-import type { ParsedQs } from "qs";
+import type { Response } from "express-serve-static-core";
+import multer from "multer"
+
 
 /**
  * Loads modules from provided directory.
@@ -52,16 +53,27 @@ function colorForStatus(status: number): string {
  * Main function. Runs the Express server and handles requests and response formatting in the console
  */
 async function main() {
+    // modules stuff
     const dir = path.resolve("./modules");
     const classes = await loadClasses(dir);
 
+    // multer stuff
+    const storage = multer.diskStorage({
+        destination: function (req, file, callback) {
+            callback(null, 'uploads/');     // Upload folder. Change to yours
+        },
+        filename: function (req, file, callback) {
+            callback(null, file.originalname);
+        }
+    });
+    const upload = multer({ storage: storage });
+
+    // express stuff
     const app = express();
     const port = 3000;
     const host = "0.0.0.0";
 
-    app.all("/wish/:path", (req, res) => {
-        handleRequest(req, classes, res);
-    });
+    app.all("/wish/:path", upload.single('file'), (req, res) => handleRequest(req, classes, res));
 
     app.listen(port, host, () => {
         log(`Listening on http://localhost:${port} ...`); // TODO: Move the PC emoji to like a general function, like log() or sth
@@ -71,7 +83,7 @@ async function main() {
 main();
 
 function handleRequest(
-    req: Request<{ path: string }, any, any, ParsedQs, Record<string, any>>,
+    req: moduleReq,
     classes: { module: IModule }[],
     res: Response<any, Record<string, any>, number>
 ) {

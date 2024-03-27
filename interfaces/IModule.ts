@@ -1,7 +1,7 @@
 import type { IModuleResponse } from "./IModuleResponse";
-import type { Request } from "express-serve-static-core";
+import type { Request, ParamsDictionary } from "express-serve-static-core";
 import type { ParsedQs } from "qs";
-export type moduleReq = Request<{ path: string }, any, any, ParsedQs, Record<string, any>>
+export type moduleReq = Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>
 export interface IModule {
     emoji: string,
     name: string,
