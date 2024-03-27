@@ -73,6 +73,8 @@ async function main() {
         }
     });
 
+    // TODO: add POST support and specify verb per module
+
     app.listen(port, host, () => {
         log(`Listening on http://localhost:${port} ...`); // TODO: Move the PC emoji to like a general function, like log() or sth
     });
