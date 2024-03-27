@@ -1,11 +1,12 @@
 import type { IModule, moduleReq } from "../interfaces/IModule";
 import type { IModuleResponse } from "../interfaces/IModuleResponse";
+
 import clipboard from "clipboardy";
 
 /**
  * GET:
  *  - value - `string` value of clipboard text
- * 
+ *
  * POST:
  *  - file - actual file to be saved (via Form)
  *
