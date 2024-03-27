@@ -17,10 +17,10 @@ class Shutdown implements IModule {
     name = "Shutdown";
     path = "shutdown";
 
-    fn(queryParams: any): IModuleResponse {
-        const abort = queryParams?.abort === ""; // empty param
-        const reboot = queryParams?.reboot === ""; // empty param
-        const timeout = queryParams?.timeout ?? "60";
+    fn(params: any): IModuleResponse {
+        const abort = params?.abort === ""; // empty param
+        const reboot = params?.reboot === ""; // empty param
+        const timeout = params?.timeout ?? "60";
 
         try {
             if (abort) {

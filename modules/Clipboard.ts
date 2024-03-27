@@ -15,8 +15,8 @@ class Clipboard implements IModule {
     path = "clipboard";
 
     // TODO: make it POST with JSON like type (string, file) and data
-    fn(queryParams: any): IModuleResponse {
-        const value = queryParams?.value;
+    fn(params: any): IModuleResponse {
+        const value = params?.value;
         if (value) {
             clipboard.writeSync(value);
             return { response: `Clipboard written: "${value}"`, status: 200 };

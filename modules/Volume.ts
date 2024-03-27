@@ -13,8 +13,8 @@ class Volume implements IModule {
     name = "Volume";
     path = "volume";
 
-    fn(queryParams: any): IModuleResponse {
-        const vol = queryParams?.value;
+    fn(params: any): IModuleResponse {
+        const vol = params?.value;
         if (!vol) {
             // IDEA: maybe return the current system volume in case of missing param?
             // you know, like getter/setter

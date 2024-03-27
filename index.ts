@@ -4,6 +4,8 @@ import { promises as fs } from "fs";
 import path from "path";
 
 import express from "express";
+import type { Request, Response } from "express-serve-static-core";
+import type { ParsedQs } from "qs";
 
 /**
  * Loads modules from provided directory.
@@ -33,7 +35,7 @@ async function loadClasses(dir: string): Promise<{ module: IModule }[]> {
 }
 
 function log(s: string) {
-    console.log("", s);     // TODO: refactor
+    console.log("", s); // TODO: refactor
 }
 
 function colorForStatus(status: number): string {
@@ -59,21 +61,12 @@ async function main() {
     const host = "0.0.0.0";
 
     app.get("/wish/:path", (req, res) => {
-        const path = req.params.path;
-        const requestedModule = classes.filter((p) => path === p.module.path);
-        if (requestedModule[0]) {
-            const moduleResult = requestedModule[0].module.fn(req.query); // Query Params validation is a module responsibility
-
-            log(`${requestedModule[0].module.emoji} /wish/${path} 📤 ${colorForStatus(moduleResult.status)}${moduleResult.response}\x1b[0m`); // TODO: color based on status code
-
-            res.send(moduleResult.response).status(moduleResult.status);
-        } else {
-            log(`❌\x1b[31mModule on path: \x1b[91m/wish/${path}\x1b[31m not found.\x1b[0m`);
-            res.send("Requested module not found").status(404);
-        }
+        handleRequest(req, classes, res, "get");
     });
 
-    // TODO: add POST support and specify verb per module
+    app.post("/wish/:path", (req, res) => {
+        handleRequest(req, classes, res, "post")
+    });
 
     app.listen(port, host, () => {
         log(`Listening on http://localhost:${port} ...`); // TODO: Move the PC emoji to like a general function, like log() or sth
@@ -81,3 +74,30 @@ async function main() {
 }
 
 main();
+
+function handleRequest(
+    req: Request<{ path: string }, any, any, ParsedQs, Record<string, any>>,
+    classes: { module: IModule }[],
+    res: Response<any, Record<string, any>, number>,
+    type: "get" | "post"
+) {
+    const path = req.params.path;
+    const requestedModule = classes.filter((p) => path === p.module.path);
+    const mod = requestedModule[0]?.module;
+    if (mod) {
+        const moduleResult = mod.fn(type === "get" ? req.query : req.body); // Validation is a module responsibility. GET gets query params, POST get the body
+
+        log(
+            `${mod.emoji} /wish/${path} 📤 ${colorForStatus(
+                moduleResult.status
+            )}${moduleResult.response}\x1b[0m`
+        );
+
+        res.send(moduleResult.response).status(moduleResult.status);
+    } else {
+        log(
+            `❌\x1b[31mModule on path: \x1b[91m/wish/${path}\x1b[31m not found.\x1b[0m`
+        );
+        res.send("Requested module not found").status(404);
+    }
+}
