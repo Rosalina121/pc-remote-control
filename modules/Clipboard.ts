@@ -10,6 +10,7 @@ import clipboard from "clipboardy";
  *  - /wish/clipboard?value=i%20like%20trains
  */
 class Clipboard implements IModule {
+    emoji = "📎"
     name = "Clipboard";
     path = "clipboard";
 

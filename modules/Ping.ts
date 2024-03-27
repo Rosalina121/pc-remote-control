@@ -2,6 +2,7 @@ import type { IModule } from "../interfaces/IModule";
 import type { IModuleResponse } from "../interfaces/IModuleResponse";
 
 class Ping implements IModule {
+    emoji = "🏓"
     name = "Ping";
     path = "ping";
 

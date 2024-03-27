@@ -3,6 +3,7 @@ import { keyboard, Key } from "@nut-tree/nut-js";
 import type { IModuleResponse } from "../interfaces/IModuleResponse";
 
 class Mute implements IModule {
+    emoji = "🔇"
     name = "Mute";
     path = "mute";
 

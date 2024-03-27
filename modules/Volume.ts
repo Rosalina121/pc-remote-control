@@ -9,6 +9,7 @@ import type { IModuleResponse } from "../interfaces/IModuleResponse";
  *  - /wish/volume?value=50
  */
 class Volume implements IModule {
+    emoji = "🔊"
     name = "Volume";
     path = "volume";
 

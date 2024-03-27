@@ -22,10 +22,10 @@ async function loadClasses(dir: string): Promise<{ module: IModule }[]> {
             classes.push(importedModule);
         }
     }
-    log(`Loaded\x1b[92m${classes.length}\x1b[0m modules:`);
+    log(`Loaded \x1b[92m${classes.length}\x1b[0m modules:`);
     log(
         `\x1b[94m${classes
-            .map((c) => c.module.name)
+            .map((c) => c.module.emoji + " " + c.module.name)
             .join(`\x1b[0m, \x1b[94m`)}\x1b[0m`
     );
 
@@ -33,7 +33,7 @@ async function loadClasses(dir: string): Promise<{ module: IModule }[]> {
 }
 
 function log(s: string) {
-    console.log(" 🖥️ ", s);
+    console.log("", s);     // TODO: refactor
 }
 
 function colorForStatus(status: number): string {
@@ -43,7 +43,7 @@ function colorForStatus(status: number): string {
         case 400:
             return "\x1b[33m";
         default:
-            return "";
+            return "\x1b[32m";
     }
 }
 
@@ -64,7 +64,7 @@ async function main() {
         if (requestedModule[0]) {
             const moduleResult = requestedModule[0].module.fn(req.query); // Query Params validation is a module responsibility
 
-            log(`📥 /wish/${path} 📤 ${colorForStatus(moduleResult.status)}${moduleResult.response}\x1b[0m`); // TODO: color based on status code
+            log(`${requestedModule[0].module.emoji} /wish/${path} 📤 ${colorForStatus(moduleResult.status)}${moduleResult.response}\x1b[0m`); // TODO: color based on status code
 
             res.send(moduleResult.response).status(moduleResult.status);
         } else {

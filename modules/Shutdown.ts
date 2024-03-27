@@ -13,6 +13,7 @@ import type { IModuleResponse } from "../interfaces/IModuleResponse";
  *  - /wish/shutdown?timeout=0&reboot
  */
 class Shutdown implements IModule {
+    emoji = "📴"
     name = "Shutdown";
     path = "shutdown";
 
