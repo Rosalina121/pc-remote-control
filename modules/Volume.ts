@@ -2,7 +2,7 @@ import type { IModule, moduleReq } from "../interfaces/IModule";
 import type { IModuleResponse } from "../interfaces/IModuleResponse";
 
 /**
- * Query params:
+ * GET/POST:
  *  - value - `[0, 100]` value to set the sys volume to
  *
  * Example:
@@ -34,11 +34,13 @@ class Volume implements IModule {
 export const module = new Volume();
 
 function handleGET(request: moduleReq): IModuleResponse {
-    const param = request.query?.value;
     // checks done separately as Number("") == 0
+
+    const param = request.query?.value;
     if (!param) {
         return { response: `Param "value" is missing`, status: 400 };
     }
+
     const vol = Number(param.toString());
     if (vol > 100 || vol < 0) {
         return {
@@ -47,6 +49,7 @@ function handleGET(request: moduleReq): IModuleResponse {
         };
     }
     const calculatedVolume = Math.round(vol * 655.35);
+
     try {
         Bun.spawn(["nircmd", "setsysvolume", calculatedVolume.toString()]);
         return { response: `Volume changed to ${vol}.`, status: 200 };

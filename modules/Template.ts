@@ -4,11 +4,16 @@ import type { IModuleResponse } from "../interfaces/IModuleResponse";
 /**
  * This is a template module you can copy over and adapt
  * 
- * Params:
- *  - tbd
+ * GET/POST:
+ *  - tbd - you can do it
+ * 
+ * POST:
+ *  - wip - now I know it
  * 
  * Example:
  *  - /wish/template
+ *  - /wish/template?tbd=another
+ *  - /wish/template {"tbd":"happy day", "wip": "in hell"}
  */
 class Template implements IModule {
     emoji = "🏓"
