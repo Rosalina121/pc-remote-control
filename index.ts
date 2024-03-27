@@ -39,13 +39,12 @@ function log(s: string) {
 }
 
 function colorForStatus(status: number): string {
-    switch (status) {
-        case 500:
-            return "\x1b[31m";
-        case 400:
-            return "\x1b[33m";
-        default:
-            return "\x1b[32m";
+    if (status >= 500) {
+        return "\x1b[31m";
+    } else if (status >= 400) {
+        return "\x1b[33m";
+    } else {
+        return "\x1b[32m";
     }
 }
 
@@ -60,12 +59,8 @@ async function main() {
     const port = 3000;
     const host = "0.0.0.0";
 
-    app.get("/wish/:path", (req, res) => {
-        handleRequest(req, classes, res, "get");
-    });
-
-    app.post("/wish/:path", (req, res) => {
-        handleRequest(req, classes, res, "post")
+    app.all("/wish/:path", (req, res) => {
+        handleRequest(req, classes, res);
     });
 
     app.listen(port, host, () => {
@@ -78,17 +73,16 @@ main();
 function handleRequest(
     req: Request<{ path: string }, any, any, ParsedQs, Record<string, any>>,
     classes: { module: IModule }[],
-    res: Response<any, Record<string, any>, number>,
-    type: "get" | "post"
+    res: Response<any, Record<string, any>, number>
 ) {
     const path = req.params.path;
-    const requestedModule = classes.filter((p) => path === p.module.path);
-    const mod = requestedModule[0]?.module;
-    if (mod) {
-        const moduleResult = mod.fn(type === "get" ? req.query : req.body); // Validation is a module responsibility. GET gets query params, POST get the body
+    const matchingClass = classes.filter((p) => path === p.module.path);
+    const requestedModule = matchingClass[0]?.module;
+    if (requestedModule) {
+        const moduleResult = requestedModule.fn(req); // req validation is a module responsibility.
 
         log(
-            `${mod.emoji} /wish/${path} 📤 ${colorForStatus(
+            `${requestedModule.emoji} /wish/${path} 📤 ${colorForStatus(
                 moduleResult.status
             )}${moduleResult.response}\x1b[0m`
         );
@@ -96,7 +90,7 @@ function handleRequest(
         res.send(moduleResult.response).status(moduleResult.status);
     } else {
         log(
-            `❌\x1b[31mModule on path: \x1b[91m/wish/${path}\x1b[31m not found.\x1b[0m`
+            `❌ \x1b[31mModule on path: \x1b[91m/wish/${path}\x1b[31m not found.\x1b[0m`
         );
         res.send("Requested module not found").status(404);
     }

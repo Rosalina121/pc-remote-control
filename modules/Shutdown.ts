@@ -1,4 +1,4 @@
-import type { IModule } from "../interfaces/IModule";
+import type { IModule, moduleReq } from "../interfaces/IModule";
 import type { IModuleResponse } from "../interfaces/IModuleResponse";
 
 /**
@@ -13,37 +13,54 @@ import type { IModuleResponse } from "../interfaces/IModuleResponse";
  *  - /wish/shutdown?timeout=0&reboot
  */
 class Shutdown implements IModule {
-    emoji = "📴"
+    emoji = "📴";
     name = "Shutdown";
     path = "shutdown";
 
-    fn(params: any): IModuleResponse {
-        const abort = params?.abort === ""; // empty param
-        const reboot = params?.reboot === ""; // empty param
-        const timeout = params?.timeout ?? "60";
-
-        try {
-            if (abort) {
-                Bun.spawn(["nircmd", "abortshutdown"]);
-                return { response: "Shutdown aborted.", status: 200 };
-            } else {
-                Bun.spawn([
-                    "nircmd",
-                    "initshutdown",
-                    `${reboot ? "Reboot" : "Shutdown"} in ${timeout} seconds.`,
-                    timeout,
-                    reboot ?? "",
-                ]);
+    fn(request?: moduleReq): IModuleResponse {
+        switch (request?.method) {
+            case "POST":
                 return {
-                    response: `${reboot ? "Reboot" : "Shutdown"} initiated.`,
-                    status: 200,
+                    response: `POST not implemented yet.`,
+                    status: 501,
                 };
-            }
-        } catch (e) {
-            const error = `Error performing "${this.path}": NirCMD is probably not installed.`;
-            return { response: error, status: 500 };
+            case "GET":
+                return handleGET(request)
+            default:
+                return {
+                    response: `Unsupported REST verb.`,
+                    status: 501,
+                };
         }
     }
 }
 
 export const module = new Shutdown();
+
+function handleGET(request: moduleReq) {
+    const abort = request?.query?.abort === ""; // empty param
+    const reboot = request?.query?.reboot === ""; // empty param
+    const timeout = request?.query?.timeout?.toString() ?? "60";
+
+    try {
+        if (abort) {
+            Bun.spawn(["nircmd", "abortshutdown"]);
+            return { response: "Shutdown aborted.", status: 200 };
+        } else {
+            Bun.spawn([
+                "nircmd",
+                "initshutdown",
+                `${reboot ? "Reboot" : "Shutdown"} in ${timeout} seconds.`,
+                timeout,
+                reboot ? "reboot" : "",
+            ]);
+            return {
+                response: `${reboot ? "Reboot" : "Shutdown"} initiated.`,
+                status: 200,
+            };
+        }
+    } catch (e) {
+        const error = `Error. NirCMD is probably not installed.`;
+        return { response: error, status: 500 };
+    }
+}

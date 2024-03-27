@@ -1,4 +1,4 @@
-import type { IModule } from "../interfaces/IModule";
+import type { IModule, moduleReq } from "../interfaces/IModule";
 import { keyboard, Key } from "@nut-tree/nut-js";
 import type { IModuleResponse } from "../interfaces/IModuleResponse";
 
@@ -7,13 +7,22 @@ class Mute implements IModule {
     name = "Mute";
     path = "mute";
 
-    fn(): IModuleResponse {
-        // My Discord mute bind
-        // TODO: just mute the device, NirCMD?
-        // If Discord specific, perhaps some kind of local API to get the current mic status
-        keyboard.type(Key.LeftControl, Key.Backslash);
-        return { response: "Mute toggled.", status: 200 };
+
+    fn(request?: moduleReq): IModuleResponse {
+        switch (request?.method) {
+            case "POST":
+                return muteMic();
+            case "GET":
+                return muteMic();
+            default:
+                return muteMic();
+        }
     }
 }
 
 export const module = new Mute();
+function muteMic() {
+    keyboard.type(Key.LeftControl, Key.Backslash);
+    return { response: "Mute toggled.", status: 200 };
+}
+
