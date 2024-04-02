@@ -1,20 +1,14 @@
 import type { IModule, moduleReq } from "../interfaces/IModule";
 import type { IModuleResponse } from "../interfaces/IModuleResponse";
 
-import clipboard from "clipboardy";
-
 /**
- * GET:
- *  - value - `string` value of clipboard text
- *
  * POST:
  *  - file - actual file to be saved (via Form)
  *
  * Example:
- *  - /wish/clipboard?value=i%20like%20trains
  *  - /wish/clipboard Form: file: actual_file_here
  */
-class Clipboard implements IModule {
+class Upload implements IModule {
     emoji = "📎";
     name = "Clipboard";
     path = "clipboard";
@@ -24,26 +18,16 @@ class Clipboard implements IModule {
             case "POST":
                 return handlePOST(request);
             case "GET":
-                return handleGET(request);
+                return {
+                    response: `GET not implemented yet.`,
+                    status: 501,
+                };
             default:
                 return {
                     response: `Unsupported REST verb.`,
                     status: 501,
                 };
         }
-    }
-}
-
-function handleGET(request: moduleReq) {
-    const value = request?.query?.value;
-    if (value) {
-        clipboard.writeSync(value.toString());
-        return { response: `Clipboard written: "${value}"`, status: 200 };
-    } else {
-        return {
-            response: `Parameter "value" may be missing.`,
-            status: 400,
-        };
     }
 }
 
@@ -60,4 +44,4 @@ function handlePOST(request: moduleReq) {
     };
 }
 
-export const module = new Clipboard();
+export const module = new Upload();
