@@ -22,7 +22,10 @@ class Clipboard implements IModule {
     fn(request?: moduleReq): IModuleResponse {
         switch (request?.method) {
             case "POST":
-                return handlePOST(request);
+                return {
+                    response: `POST not implemented yet.`,
+                    status: 501,
+                };
             case "GET":
                 return handleGET(request);
             default:
@@ -45,19 +48,6 @@ function handleGET(request: moduleReq) {
             status: 400,
         };
     }
-}
-
-function handlePOST(request: moduleReq) {
-    if (request?.file) {
-        return {
-            response: `Got file "${request.file.originalname}"`,
-            status: 200,
-        };
-    }
-    return {
-        response: `POST requires a file.`,
-        status: 400,
-    };
 }
 
 export const module = new Clipboard();
