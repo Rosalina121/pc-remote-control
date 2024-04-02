@@ -1,7 +1,6 @@
 # pc-remote-control
 
-A [Bun](https://bun.sh) server for remote control for your PC.
-To install dependencies:
+A [Bun](https://bun.sh) server for remote control for your PC. Based on my old [SiriFlask](https://github.com/Rosalina121/SiriFlask) project.
 
 ## Quickstart
 
