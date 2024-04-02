@@ -12,7 +12,6 @@ import clipboard from "clipboardy";
  *
  * Example:
  *  - /wish/clipboard?value=i%20like%20trains
- *  - /wish/clipboard Form: file: actual_file_here
  */
 class Clipboard implements IModule {
     emoji = "📎";

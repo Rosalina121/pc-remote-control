@@ -15,11 +15,15 @@ To run:
 bun run start
 ```
 
+## Config
+`config.json` contains configuration for general app use (like files upload folder for Multer)  
+Each Module may have it's own config for more specific use.
+
 ## Modules
 
 Each functionality is split into modules in, well, `/modules`. It's just a TS class extending the `IModule`. All are loaded dynamically, so if you want to add something new, just create a new class and export the instance (or copy and adapt `Template.ts`).
 
-A module has an `emoji`, `name`, `path` to be invoked on and `fn(request: moduleReq): IModuleResponse` performing a task. `IModuleResponse` is just a response string and a status code and `moduleReq` just an alias for Express Request.
+A module has an `emoji`, `name`, `path` to be invoked on and `fn(request: moduleReq): IModuleResponse` performing a task. `IModuleResponse` is just a response string and a status code and `moduleReq` just an alias for the Express Request.
 
 ## In this repo
 
@@ -33,15 +37,12 @@ Following modules are available when you pull this repo:
 -   Shutdown - performs a shutdown in 60s or after specified time
     -   Also you can reboot and abort the shutdown
 -   Volume - changes volume to provided value
--   Clipboard - sets clipboard to provided string or uploads a file to specified folder
+-   Clipboard - sets clipboard to provided string
+-   Upload - saves uploaded file to folder
 
 ### Dependencies
 
-Some are cross-OS, some Win only. Here's the breakdown of which modules depend on what, so you know what you expect to work out of the box.
+Some are cross-OS, some Win only. Here's the breakdown of modules that depend on not cross OS deps.
 
 -   [NirCMD](https://www.nirsoft.net/utils/nircmd.html) - Windows only
     -   `Shutdown`, `Volume`
--   [clipboardy](https://github.com/sindresorhus/clipboardy) - cross-OS
-    -   `Clipboard`
--   [nut-js](https://github.com/nut-tree/nut.js) - cross-OS
-    -   `Mute`

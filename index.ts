@@ -7,6 +7,7 @@ import express from "express";
 import type { Response } from "express-serve-static-core";
 import multer from "multer"
 
+import config from "./config.json"
 
 /**
  * Loads modules from provided directory.
@@ -18,6 +19,7 @@ async function loadClasses(dir: string): Promise<{ module: IModule }[]> {
     const files = await fs.readdir(dir);
     const classes: { module: IModule }[] = [];
     log("Loading modules...");
+
     for (const file of files) {
         if (file.endsWith(".ts")) {
             const filePath = path.join(dir, file);
@@ -60,7 +62,7 @@ async function main() {
     // multer stuff
     const storage = multer.diskStorage({
         destination: function (req, file, callback) {
-            callback(null, 'uploads/');     // Upload folder. Change to yours
+            callback(null, config.uploadsPath);     // Upload folder. Change to yours
         },
         filename: function (req, file, callback) {
             callback(null, file.originalname);

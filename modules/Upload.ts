@@ -6,12 +6,12 @@ import type { IModuleResponse } from "../interfaces/IModuleResponse";
  *  - file - actual file to be saved (via Form)
  *
  * Example:
- *  - /wish/clipboard Form: file: actual_file_here
+ *  - /wish/upload Form: file: actual_file_here
  */
 class Upload implements IModule {
-    emoji = "📎";
-    name = "Clipboard";
-    path = "clipboard";
+    emoji = "⬆️";
+    name = "Upload";
+    path = "upload";
 
     fn(request?: moduleReq): IModuleResponse {
         switch (request?.method) {
