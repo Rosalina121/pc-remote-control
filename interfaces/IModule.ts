@@ -6,5 +6,5 @@ export interface IModule {
     emoji: string,
     name: string,
     path: string,
-    fn: (request: moduleReq) => IModuleResponse  // any is actually ParsedQs
+    fn: (request: moduleReq) => IModuleResponse | Promise<IModuleResponse>  // any is actually ParsedQs
 }

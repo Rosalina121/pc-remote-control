@@ -1,6 +1,8 @@
 import type { IModule, moduleReq } from "../interfaces/IModule";
 import type { IModuleResponse } from "../interfaces/IModuleResponse";
 
+import { $ } from "bun";
+
 /**
  * GET/POST:
  *  - timeout - optional `number` to delay the shutdown in seconds (default 60)
@@ -8,11 +10,11 @@ import type { IModuleResponse } from "../interfaces/IModuleResponse";
  * GET:
  *  - abort - if present aborts the shutdown
  *  - reboot - if present will reboot
- * 
+ *
  * POST:
  *  - abort - optional `boolean` if to abort the shutdown
  *  - reboot - optional `boolean` if to reboot
- * 
+ *
  * Example:
  *  - /wish/shutdown
  *  - /wish/shutdown?abort
@@ -25,12 +27,13 @@ class Shutdown implements IModule {
     name = "Shutdown";
     path = "shutdown";
 
-    fn(request: moduleReq): IModuleResponse {
+    async fn(request: moduleReq): Promise<IModuleResponse> {
         switch (request.method) {
             case "POST":
-                return handlePOST(request)
+                return handlePOST(request);
             case "GET":
-                return handleGET(request)
+                const result = await handleGET(request);
+                return result;
             default:
                 return {
                     response: `Unsupported REST verb.`,
@@ -42,7 +45,7 @@ class Shutdown implements IModule {
 
 export const module = new Shutdown();
 
-function handleGET(request: moduleReq) {
+async function handleGET(request: moduleReq) {
     const abort = request.query?.abort === ""; // empty param
     const reboot = request.query?.reboot === ""; // empty param
     const timeout = request.query?.timeout?.toString() ?? "60";
@@ -52,15 +55,12 @@ function handleGET(request: moduleReq) {
             Bun.spawn(["nircmd", "abortshutdown"]);
             return { response: "Shutdown aborted.", status: 200 };
         } else {
-            Bun.spawn([
-                "nircmd",
-                "initshutdown",
-                `${reboot ? "Reboot" : "Shutdown"} in ${timeout} seconds.`,
-                timeout,
-                reboot ? "reboot" : "",
-            ]);     // TODO: check if Bun 1.1 $ Bun Shell could work here. I *know* it works, but async/await shenanigans.
+            // nircmd initshutdown "Message" timeout(in seconds) reboot(or nothing)
+            await $`nircmd initshutdown "${
+                reboot ? "Reboot" : "Shutdown"
+            } in ${timeout} seconds." ${timeout} ${reboot ? "reboot" : ""}`;
             return {
-                response: `${reboot ? "Reboot" : "Shutdown"} initiated.`,
+                response: `${reboot ? "Reboot" : "Shutdown"} initated.`,
                 status: 200,
             };
         }
@@ -70,7 +70,7 @@ function handleGET(request: moduleReq) {
     }
 }
 
-function handlePOST(request: moduleReq) {
+async function handlePOST(request: moduleReq) {
     const abort = request.body.abort;
     const reboot = request.body.reboot;
     const timeout = request.body.timeout?.toString() ?? "60";
@@ -96,6 +96,4 @@ function handlePOST(request: moduleReq) {
         const error = `Error. NirCMD is probably not installed.`;
         return { response: error, status: 500 };
     }
-    return { response: "esh", status: 500 };
-
 }

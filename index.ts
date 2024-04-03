@@ -99,14 +99,16 @@ function handleRequest(
     const requestedModule = matchingClass[0]?.module;
     if (requestedModule) {
         const moduleResult = requestedModule.fn(req); // req validation is a module responsibility.
+        Promise.resolve(moduleResult).then((mr)=>{
+            log(
+                `${requestedModule.emoji} /wish/${path} • ${colorForStatus(
+                    mr.status
+                )}${mr.response}\x1b[0m`
+            );
+    
+            res.send(mr.response).status(mr.status);
+        })
 
-        log(
-            `${requestedModule.emoji} /wish/${path} • ${colorForStatus(
-                moduleResult.status
-            )}${moduleResult.response}\x1b[0m`
-        );
-
-        res.send(moduleResult.response).status(moduleResult.status);
     } else {
         log(
             `❌ \x1b[31mModule on path: \x1b[91m/wish/${path}\x1b[31m not found.\x1b[0m`
