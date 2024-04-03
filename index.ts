@@ -78,6 +78,8 @@ async function main() {
     const port = 3000;
     const host = "0.0.0.0";
 
+    app.use(express.json());
+
     app.all("/wish/:path", upload.single('file'), (req, res) => handleRequest(req, classes, res));
 
     app.listen(port, host, () => {

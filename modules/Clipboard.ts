@@ -18,8 +18,8 @@ class Clipboard implements IModule {
     name = "Clipboard";
     path = "clipboard";
 
-    fn(request?: moduleReq): IModuleResponse {
-        switch (request?.method) {
+    fn(request: moduleReq): IModuleResponse {
+        switch (request.method) {
             case "POST":
                 return {
                     response: `POST not implemented yet.`,
@@ -37,7 +37,7 @@ class Clipboard implements IModule {
 }
 
 function handleGET(request: moduleReq) {
-    const value = request?.query?.value;
+    const value = request.query?.value;
     if (value) {
         clipboard.writeSync(value.toString());
         return { response: `Clipboard written: "${value}"`, status: 200 };

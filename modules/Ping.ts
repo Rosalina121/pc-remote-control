@@ -6,8 +6,8 @@ class Ping implements IModule {
     name = "Ping";
     path = "ping";
 
-    fn(request?: moduleReq): IModuleResponse {
-        switch (request?.method) {
+    fn(request: moduleReq): IModuleResponse {
+        switch (request.method) {
             case "POST":
                 return { response: "Pong!", status: 200 };
 

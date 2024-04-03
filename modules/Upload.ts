@@ -13,8 +13,8 @@ class Upload implements IModule {
     name = "Upload";
     path = "upload";
 
-    fn(request?: moduleReq): IModuleResponse {
-        switch (request?.method) {
+    fn(request: moduleReq): IModuleResponse {
+        switch (request.method) {
             case "POST":
                 return handlePOST(request);
             case "GET":
@@ -32,7 +32,7 @@ class Upload implements IModule {
 }
 
 function handlePOST(request: moduleReq) {
-    if (request?.file) {
+    if (request.file) {
         return {
             response: `Got file "${request.file.originalname}"`,
             status: 200,

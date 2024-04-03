@@ -20,8 +20,8 @@ class Template implements IModule {
     name = "Template";
     path = "template";
 
-    fn(request?: moduleReq): IModuleResponse {
-        switch (request?.method) {
+    fn(request: moduleReq): IModuleResponse {
+        switch (request.method) {
             case "POST":
                 return {
                     response: `POST not implemented yet.`,

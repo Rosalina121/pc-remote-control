@@ -8,8 +8,8 @@ class Mute implements IModule {
     path = "mute";
 
 
-    fn(request?: moduleReq): IModuleResponse {
-        switch (request?.method) {
+    fn(request: moduleReq): IModuleResponse {
+        switch (request.method) {
             case "POST":
                 return muteMic();
             case "GET":
