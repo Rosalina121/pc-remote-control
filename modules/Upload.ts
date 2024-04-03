@@ -9,7 +9,7 @@ import type { IModuleResponse } from "../interfaces/IModuleResponse";
  *  - /wish/upload Form: file: actual_file_here
  */
 class Upload implements IModule {
-    emoji = "⬆️";
+    emoji = "📥";
     name = "Upload";
     path = "upload";
 

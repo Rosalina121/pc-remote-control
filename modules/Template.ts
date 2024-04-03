@@ -16,7 +16,7 @@ import type { IModuleResponse } from "../interfaces/IModuleResponse";
  *  - /wish/template {"tbd":"happy day", "wip": "in hell"}
  */
 class Template implements IModule {
-    emoji = "🏓"
+    emoji = "📄"
     name = "Template";
     path = "template";
 

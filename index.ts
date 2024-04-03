@@ -33,12 +33,12 @@ async function loadClasses(dir: string): Promise<{ module: IModule }[]> {
             .map((c) => c.module.emoji + " " + c.module.name)
             .join(`\x1b[0m, \x1b[94m`)}\x1b[0m`
     );
-
+    // TODO: validate duplicate paths
     return classes;
 }
 
 function log(s: string) {
-    console.log("", s); // TODO: refactor
+    console.log(s);
 }
 
 function colorForStatus(status: number): string {
@@ -55,6 +55,9 @@ function colorForStatus(status: number): string {
  * Main function. Runs the Express server and handles requests and response formatting in the console
  */
 async function main() {
+    log(`💻 PC Remote Control v0.1`)
+
+
     // modules stuff
     const dir = path.resolve("./modules");
     const classes = await loadClasses(dir);
@@ -78,7 +81,7 @@ async function main() {
     app.all("/wish/:path", upload.single('file'), (req, res) => handleRequest(req, classes, res));
 
     app.listen(port, host, () => {
-        log(`Listening on http://localhost:${port} ...`); // TODO: Move the PC emoji to like a general function, like log() or sth
+        log(`Listening on 🌍 \x1b[36mhttp://localhost:${port}\x1b[0m`); // TODO: Move the PC emoji to like a general function, like log() or sth
     });
 }
 
@@ -96,7 +99,7 @@ function handleRequest(
         const moduleResult = requestedModule.fn(req); // req validation is a module responsibility.
 
         log(
-            `${requestedModule.emoji} /wish/${path} 📤 ${colorForStatus(
+            `${requestedModule.emoji} /wish/${path} • ${colorForStatus(
                 moduleResult.status
             )}${moduleResult.response}\x1b[0m`
         );
