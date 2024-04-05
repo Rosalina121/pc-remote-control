@@ -30,10 +30,9 @@ class Shutdown implements IModule {
     async fn(request: moduleReq): Promise<IModuleResponse> {
         switch (request.method) {
             case "POST":
-                return handlePOST(request);
+                return await handlePOST(request);
             case "GET":
-                const result = await handleGET(request);
-                return result;
+                return await handleGET(request);
             default:
                 return {
                     response: `Unsupported REST verb.`,
@@ -50,6 +49,20 @@ async function handleGET(request: moduleReq) {
     const reboot = request.query?.reboot === ""; // empty param
     const timeout = request.query?.timeout?.toString() ?? "60";
 
+    return performShutdown(abort, reboot, timeout);
+}
+
+
+async function handlePOST(request: moduleReq) {
+    const abort = request.body.abort;
+    const reboot = request.body.reboot;
+    const timeout = request.body.timeout?.toString() ?? "60";
+
+    return performShutdown(abort, reboot, timeout);
+}
+
+
+async function performShutdown(abort:boolean, reboot: boolean, timeout: string) {
     try {
         if (abort) {
             Bun.spawn(["nircmd", "abortshutdown"]);
@@ -61,34 +74,6 @@ async function handleGET(request: moduleReq) {
             } in ${timeout} seconds." ${timeout} ${reboot ? "reboot" : ""}`;
             return {
                 response: `${reboot ? "Reboot" : "Shutdown"} initated.`,
-                status: 200,
-            };
-        }
-    } catch (e) {
-        const error = `Error. NirCMD is probably not installed.`;
-        return { response: error, status: 500 };
-    }
-}
-
-async function handlePOST(request: moduleReq) {
-    const abort = request.body.abort;
-    const reboot = request.body.reboot;
-    const timeout = request.body.timeout?.toString() ?? "60";
-
-    try {
-        if (abort) {
-            Bun.spawn(["nircmd", "abortshutdown"]);
-            return { response: "Shutdown aborted.", status: 200 };
-        } else {
-            Bun.spawn([
-                "nircmd",
-                "initshutdown",
-                `${reboot ? "Reboot" : "Shutdown"} in ${timeout} seconds.`,
-                timeout,
-                reboot ? "reboot" : "",
-            ]);
-            return {
-                response: `${reboot ? "Reboot" : "Shutdown"} initiated.`,
                 status: 200,
             };
         }
