@@ -45,27 +45,29 @@ class Shutdown implements IModule {
 export const module = new Shutdown();
 
 async function handleGET(request: moduleReq) {
-    const abort = request.query?.abort === ""; // empty param
-    const reboot = request.query?.reboot === ""; // empty param
-    const timeout = request.query?.timeout?.toString() ?? "60";
-
-    return performShutdown(abort, reboot, timeout);
+    return performShutdown(
+        request.query?.abort === "",
+        request.query?.reboot === "",
+        request.query?.timeout?.toString() ?? "60"
+    );
 }
-
 
 async function handlePOST(request: moduleReq) {
-    const abort = request.body.abort;
-    const reboot = request.body.reboot;
-    const timeout = request.body.timeout?.toString() ?? "60";
-
-    return performShutdown(abort, reboot, timeout);
+    return performShutdown(
+        request.body.abort,
+        request.body.reboot,
+        request.body.timeout?.toString() ?? "60"
+    );
 }
 
-
-async function performShutdown(abort:boolean, reboot: boolean, timeout: string) {
+async function performShutdown(
+    abort: boolean,
+    reboot: boolean,
+    timeout: string
+) {
     try {
         if (abort) {
-            Bun.spawn(["nircmd", "abortshutdown"]);
+            Bun.spawn(["nircmd", "abortshutdown"]);     // TODO check why $`` exits with 92
             return { response: "Shutdown aborted.", status: 200 };
         } else {
             // nircmd initshutdown "Message" timeout(in seconds) reboot(or nothing)
