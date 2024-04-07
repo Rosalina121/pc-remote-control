@@ -5,9 +5,11 @@ import path from "path";
 
 import express from "express";
 import type { Response } from "express-serve-static-core";
-import multer from "multer"
+import multer from "multer";
 
-import config from "./config.json"
+import { red, yellow, green, lightRed, white, blue, cyan } from "kolorist";
+
+import config from "./config.json";
 
 /**
  * Loads modules from provided directory.
@@ -18,7 +20,7 @@ import config from "./config.json"
 async function loadClasses(dir: string): Promise<{ module: IModule }[]> {
     const files = await fs.readdir(dir);
     const classes: { module: IModule }[] = [];
-    log("Loading modules...");
+    console.log("Loading modules...");
 
     for (const file of files) {
         if (file.endsWith(".ts")) {
@@ -27,27 +29,25 @@ async function loadClasses(dir: string): Promise<{ module: IModule }[]> {
             classes.push(importedModule);
         }
     }
-    log(`Loaded \x1b[92m${classes.length}\x1b[0m modules:`);
-    log(
-        `\x1b[94m${classes
-            .map((c) => c.module.emoji + " " + c.module.name)
-            .join(`\x1b[0m, \x1b[94m`)}\x1b[0m`
+    console.log("Loaded", green(`${classes.length}`), "modules:");
+    console.log(
+        blue(
+            `${classes
+                .map((c) => c.module.emoji + " " + c.module.name)
+                .join(white(","))}`
+        )
     );
     // TODO: validate duplicate paths
     return classes;
 }
 
-function log(s: string) {
-    console.log(s);
-}
-
-function colorForStatus(status: number): string {
+function colorForStatus(status: number, text: string): string {
     if (status >= 500) {
-        return "\x1b[31m";
+        return red(text);
     } else if (status >= 400) {
-        return "\x1b[33m";
+        return yellow(text);
     } else {
-        return "\x1b[32m";
+        return green(text);
     }
 }
 
@@ -55,8 +55,7 @@ function colorForStatus(status: number): string {
  * Main function. Runs the Express server and handles requests and response formatting in the console
  */
 async function main() {
-    log(`💻 PC Remote Control v0.1`)
-
+    console.log(`💻 PC Remote Control v0.1`);
 
     // modules stuff
     const dir = path.resolve("./modules");
@@ -65,11 +64,11 @@ async function main() {
     // multer stuff
     const storage = multer.diskStorage({
         destination: function (req, file, callback) {
-            callback(null, config.uploadsPath);     // Upload folder. Change to yours
+            callback(null, config.uploadsPath); // Upload folder. Change to yours
         },
         filename: function (req, file, callback) {
             callback(null, file.originalname);
-        }
+        },
     });
     const upload = multer({ storage: storage });
 
@@ -80,10 +79,12 @@ async function main() {
 
     app.use(express.json());
 
-    app.all("/wish/:path", upload.single('file'), (req, res) => handleRequest(req, classes, res));
+    app.all("/wish/:path", upload.single("file"), (req, res) =>
+        handleRequest(req, classes, res)
+    );
 
     app.listen(port, host, () => {
-        log(`Listening on 🌍 \x1b[36mhttp://localhost:${port}\x1b[0m`); // TODO: Move the PC emoji to like a general function, like log() or sth
+        console.log("Listening on 🌍", cyan(`http://localhost:${port}`));
     });
 }
 
@@ -99,19 +100,21 @@ function handleRequest(
     const requestedModule = matchingClass[0]?.module;
     if (requestedModule) {
         const moduleResult = requestedModule.fn(req); // req validation is a module responsibility.
-        Promise.resolve(moduleResult).then((mr)=>{
-            log(
+        Promise.resolve(moduleResult).then((mr) => {
+            console.log(
                 `${requestedModule.emoji} /wish/${path} • ${colorForStatus(
-                    mr.status
-                )}${mr.response}\x1b[0m`
+                    mr.status,
+                    mr.response
+                )}`
             );
-    
-            res.send(mr.response).status(mr.status);
-        })
 
+            res.send(mr.response).status(mr.status);
+        });
     } else {
-        log(
-            `❌ \x1b[31mModule on path: \x1b[91m/wish/${path}\x1b[31m not found.\x1b[0m`
+        console.log(
+            `❌ ${red("Module on path:")} ${lightRed("/wish/${path}")} ${red(
+                "not found."
+            )}`
         );
         res.send("Requested module not found").status(404);
     }
