@@ -41,7 +41,7 @@ Following modules are available when you pull this repo:
 
 ### Dependencies
 
-Some are cross-OS, some Win only. Here's the breakdown of modules that lean one way or another.
+Some are cross-OS, some Win only. Here's the breakdown of deps that lean one way or another.
 
 -   [NirCMD](https://www.nirsoft.net/utils/nircmd.html) - Windows only
     -   `Shutdown`, `Volume`
