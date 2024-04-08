@@ -4,6 +4,10 @@ import type { IModuleResponse } from "../interfaces/IModuleResponse";
 /**
  * This is a template module you can copy over and adapt
  * 
+ * Config:
+ *  - config - from the
+ *  - json - file named as the module (i.e. Template.json)
+ * 
  * GET/POST:
  *  - tbd - you can do it
  * 
@@ -16,9 +20,9 @@ import type { IModuleResponse } from "../interfaces/IModuleResponse";
  *  - /wish/template {"tbd":"happy day", "wip": "in hell"}
  */
 class Template implements IModule {
-    emoji = "📄"
+    emoji = "📄"            // preferably https://gist.github.com/gurki/f5dae63795c17da2f33c3e6c5877ce30 
     name = "Template";
-    path = "template";
+    path = "template";      // kebab-case of the above
 
     fn(request: moduleReq): IModuleResponse {
         switch (request.method) {

@@ -44,4 +44,4 @@ Following modules are available when you pull this repo:
 Some are cross-OS, some Win only. Here's the breakdown of deps that lean one way or another.
 
 -   [NirCMD](https://www.nirsoft.net/utils/nircmd.html) - Windows only
-    -   `Shutdown`, `Volume`
+    -   `Shutdown`, `Volume`, `Switch Audio`

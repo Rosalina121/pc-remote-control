@@ -80,7 +80,7 @@ async function performShutdown(
             };
         }
     } catch (e) {
-        const error = `Error. NirCMD is probably not installed.`;
+        const error = `Error. NirCMD is probably not installed. Error: ${e}`;
         return { response: error, status: 500 };
     }
 }
