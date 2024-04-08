@@ -67,7 +67,7 @@ async function performShutdown(
 ) {
     try {
         if (abort) {
-            Bun.spawn(["nircmd", "abortshutdown"]);     // TODO check why $`` exits with 92
+            Bun.spawn(["nircmd", "abortshutdown"]); // TODO check why $`` exits with 92
             return { response: "Shutdown aborted.", status: 200 };
         } else {
             // nircmd initshutdown "Message" timeout(in seconds) reboot(or nothing)
