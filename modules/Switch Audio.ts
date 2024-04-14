@@ -5,7 +5,8 @@ import { $ } from "bun";
 
 /**
  * This module switches audio to the audio device provided in params (by name)
- * Note: Both default sound & communication
+ * Note: Both default sound & communication. To change this behavior just comment
+ *       out either shell line with "1" or "2".
  *
  * GET/POST:
  *  - device - `string` name of the audio device as seen in the Sound in Control Panel

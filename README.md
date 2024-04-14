@@ -24,6 +24,8 @@ Each functionality is split into modules in, well, `/modules`. It's just a TS cl
 
 A module has an `emoji`, `name`, `path` to be invoked on and `fn(request: moduleReq): IModuleResponse` performing a task. `IModuleResponse` is just a response string and a status code and `moduleReq` just an alias for the Express Request.
 
+Some modules have an extra `.json` file named same as the module, which contains extra configs. These have to be created manually, as in most cases they include things like tokens, or personal stuff.
+
 ## In this repo
 
 ### Available modules
@@ -35,9 +37,11 @@ Following modules are available when you pull this repo:
     -   TODO: mute the default recording device instead
 -   Shutdown - performs a shutdown in 60s or after specified time
     -   Also you can reboot and abort the shutdown
+    -   Supports Home Assistant Wake on LAN entity (one-directional, toggles it based on context)
 -   Volume - changes volume to provided value
 -   Clipboard - sets clipboard to provided string
 -   Upload - saves uploaded file to folder
+-   Switch Audio - switches to the audio device of provided name
 
 ### Dependencies
 
