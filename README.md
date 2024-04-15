@@ -37,7 +37,6 @@ Following modules are available when you pull this repo:
     -   TODO: mute the default recording device instead
 -   Shutdown - performs a shutdown in 60s or after specified time
     -   Also you can reboot and abort the shutdown
-    -   Supports Home Assistant Wake on LAN entity (one-directional, toggles it based on context)
 -   Volume - changes volume to provided value
 -   Clipboard - sets clipboard to provided string
 -   Upload - saves uploaded file to folder

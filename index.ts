@@ -107,7 +107,6 @@ function handleRequest(
                     mr.response
                 )}`
             );
-
             res.send(mr.response).status(mr.status);
         });
     } else {

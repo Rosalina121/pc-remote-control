@@ -2,9 +2,6 @@ import type { IModule, moduleReq } from "../interfaces/IModule";
 import type { IModuleResponse } from "../interfaces/IModuleResponse";
 
 import { $ } from "bun";
-
-import config from "./Shutdown.json";
-
 /**
  * Config:
  *  - ha_url - URL of a Home Assistant instance
@@ -77,12 +74,9 @@ async function performShutdown(
 ) {
     try {
         if (abort) {
-            await callHomeAssistant("on")
             Bun.spawn(["nircmd", "abortshutdown"]); // TODO check why $`` exits with 92
             return { response: "Shutdown aborted.", status: 200 };
         } else {
-            await callHomeAssistant("off")
-
             // nircmd initshutdown "Message" timeout(in seconds) reboot(or nothing)
             await $`nircmd initshutdown "${
                 reboot ? "Reboot" : "Shutdown"
@@ -95,25 +89,5 @@ async function performShutdown(
     } catch (e) {
         const error = `Error. NirCMD is probably not installed. Error: ${e}`;
         return { response: error, status: 500 };
-    }
-}
-
-async function callHomeAssistant(state: "on" | "off") {
-    if (config.ha_url) {
-        const response = await fetch(
-            `https://${config.ha_url}/api/states/${config.ha_wol_switch}`,
-            {
-                method: "POST",
-                body: JSON.stringify({ state: state }),
-                headers: {
-                    "Content-Type": "application/json",
-    
-                    Authorization: `Bearer ${config.ha_token}`,
-                },
-            }
-        );
-    
-        const body = await response.json();
-        // TODO: do something with the response?
     }
 }
