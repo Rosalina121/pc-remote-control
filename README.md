@@ -1,6 +1,8 @@
 # pc-remote-control
 
-A [Bun](https://bun.sh) server for remote control for your PC. Based on my old [SiriFlask](https://github.com/Rosalina121/SiriFlask) project.
+A [Bun](https://bun.sh) server for remote control for your PC. Loosely based on my old [SiriFlask](https://github.com/Rosalina121/SiriFlask) project.  
+
+![Example CLI](example.png)
 
 ## Quickstart
 
