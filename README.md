@@ -35,8 +35,6 @@ Some modules have an extra `.json` file named same as the module, which contains
 Following modules are available when you pull this repo:
 
 -   Ping - just responds with "Pong!"
--   Mute - for now just runs a key combination
-    -   TODO: mute the default recording device instead
 -   Shutdown - performs a shutdown in 60s or after specified time
     -   Also you can reboot and abort the shutdown
     -   On Linux the seconds are rounded to minutes

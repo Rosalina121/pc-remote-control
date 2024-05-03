@@ -107,7 +107,7 @@ async function handleLinux(abort: boolean, reboot: boolean, timeout: string) {
             return { response: "Shutdown aborted.", status: 200 };
         } else {
             await $`shutdown -h ${reboot ? "-r" : ""} ${
-                timeoutInMinutes ? "+${timeoutInMinutes}" : ""
+                timeoutInMinutes ? `+${timeoutInMinutes}` : ""
             }`;
             return {
                 response: `${reboot ? "Reboot" : "Shutdown"} initated.`,
