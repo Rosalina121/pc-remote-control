@@ -47,8 +47,11 @@ Following modules are available when you pull this repo:
 
 ### OS support
 Most modules will work regardless of the platform, but some are currently Windows only.  
+Also some modules may require extra dependencies to work correctly on certain systems.  
 
 Win only modules:
 - `Volume` - uses [NirCMD](https://www.nirsoft.net/utils/nircmd.html)
 - `Switch Audio` - uses [NirCMD](https://www.nirsoft.net/utils/nircmd.html)
 
+Extra dependencies:
+- `Clipboard` requires `libxtst-dev` on a Linux system (simple `apt install` works).
