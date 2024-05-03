@@ -39,14 +39,16 @@ Following modules are available when you pull this repo:
     -   TODO: mute the default recording device instead
 -   Shutdown - performs a shutdown in 60s or after specified time
     -   Also you can reboot and abort the shutdown
+    -   On Linux the seconds are rounded to minutes
 -   Volume - changes volume to provided value
 -   Clipboard - sets clipboard to provided string
 -   Upload - saves uploaded file to folder
 -   Switch Audio - switches to the audio device of provided name
 
-### Dependencies
+### OS support
+Most modules will work regardless of the platform, but some are currently Windows only.  
 
-Some are cross-OS, some Win only. Here's the breakdown of deps that lean one way or another.
+Win only modules:
+- `Volume` - uses [NirCMD](https://www.nirsoft.net/utils/nircmd.html)
+- `Switch Audio` - uses [NirCMD](https://www.nirsoft.net/utils/nircmd.html)
 
--   [NirCMD](https://www.nirsoft.net/utils/nircmd.html) - Windows only
-    -   `Shutdown`, `Volume`, `Switch Audio`

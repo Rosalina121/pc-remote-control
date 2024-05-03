@@ -3,16 +3,9 @@ import type { IModuleResponse } from "../interfaces/IModuleResponse";
 
 import { $ } from "bun";
 /**
- * Config:
- *  - ha_url - URL of a Home Assistant instance
- *  - ha_token - optional, Home Assistant auth token
- *  - ha_wol_switch - optional, name of the WOL entity in Home Assistant
- *  Note: if you toggle WOL in HA differently than via a switch entity you'll need
- *        to adapt the fetch() call. To generate token go to HA -> your profile ->
- *        Security tab -> Long-lived access tokens
  *
  * GET/POST:
- *  - timeout - optional `number` to delay the shutdown in seconds (default 60)
+ *  - timeout - optional `number` to delay the shutdown in seconds (default 60). Rounded to minutes if run on Linux.
  *
  * GET:
  *  - abort - if present aborts the shutdown
@@ -72,6 +65,20 @@ async function performShutdown(
     reboot: boolean,
     timeout: string
 ) {
+    switch (process.platform) {
+        case "win32":
+            return handleWindows(abort, reboot, timeout);
+        case "linux":
+            return handleLinux(abort, reboot, timeout);
+
+        default:
+            return {
+                response: `Unsupported platform: ${process.platform}. Please create an issue and/or pull request on the git repo.`,
+                status: 501,
+            };
+    }
+}
+async function handleWindows(abort: boolean, reboot: boolean, timeout: string) {
     try {
         if (abort) {
             Bun.spawn(["nircmd", "abortshutdown"]); // TODO check why $`` exits with 92
@@ -88,6 +95,27 @@ async function performShutdown(
         }
     } catch (e) {
         const error = `Error. NirCMD is probably not installed. Error: ${e}`;
+        return { response: error, status: 500 };
+    }
+}
+
+async function handleLinux(abort: boolean, reboot: boolean, timeout: string) {
+    const timeoutInMinutes = Math.round(parseInt(timeout) / 60);
+    try {
+        if (abort) {
+            await $`shutdown -c`;
+            return { response: "Shutdown aborted.", status: 200 };
+        } else {
+            await $`shutdown -h ${reboot ? "-r" : ""} ${
+                timeoutInMinutes ? "+${timeoutInMinutes}" : ""
+            }`;
+            return {
+                response: `${reboot ? "Reboot" : "Shutdown"} initated.`,
+                status: 200,
+            };
+        }
+    } catch (e) {
+        const error = `Error: ${e}`;
         return { response: error, status: 500 };
     }
 }
