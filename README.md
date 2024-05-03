@@ -44,12 +44,9 @@ Following modules are available when you pull this repo:
 -   Switch Audio - switches to the audio device of provided name
 
 ### OS support
-Most modules will work regardless of the platform, but some are currently Windows only.  
+Most modules will work regardless of the platform, but some may only work on a specific OS.  
 Also some modules may require extra dependencies to work correctly on certain systems.  
-
-Win only modules:
-- `Volume` - uses [NirCMD](https://www.nirsoft.net/utils/nircmd.html)
-- `Switch Audio` - uses [NirCMD](https://www.nirsoft.net/utils/nircmd.html)
 
 Extra dependencies:
 - `Clipboard` requires `libxtst-dev` on a Linux system (simple `apt install` works).
+- `Volume`, `Switch Audio` and `Shutdown` use [NirCMD](https://www.nirsoft.net/utils/nircmd.html) to work on Windows.

@@ -5,8 +5,9 @@ import { $ } from "bun";
 
 /**
  * This module switches audio to the audio device provided in params (by name)
- * Note: Both default sound & communication. To change this behavior just comment
+ * Note for Windows: Both default sound & communication. To change this behavior just comment
  *       out either shell line with "1" or "2".
+ * Note for Linux: Works with PulseAudio. Find out source name via `pactl list sources`.
  *
  * GET/POST:
  *  - device - `string` name of the audio device as seen in the Sound in Control Panel
@@ -55,6 +56,22 @@ async function handlePOST(request: moduleReq) {
 }
 
 async function performToggle(device: string) {
+    switch (process.platform) {
+        case "win32":
+            return handleWindows(device);
+
+        case "linux":
+            return handleLinux(device);
+
+        default:
+            return {
+                response: `Unsupported platform: ${process.platform}. Please create an issue and/or pull request on the git repo.`,
+                status: 501,
+            };
+    }
+}
+
+async function handleWindows(device:string) {
     try {
         await $`nircmd setdefaultsounddevice ${device} 1`;
         await $`nircmd setdefaultsounddevice ${device} 2`;
@@ -66,4 +83,19 @@ async function performToggle(device: string) {
         const error = `Error. NirCMD is probably not installed. Error: ${e}`;
         return { response: error, status: 500 };
     }
+}
+
+async function handleLinux(device:string) {
+    try {
+        // find out source name via `pactl list sources`
+        await $`pactl set-default-source ${device}`;
+        return {
+            response: `Device set to: ${device}.`,
+            status: 200,
+        };
+    } catch (e) {
+        const error = `Error: ${e}`;
+        return { response: error, status: 500 };
+    }
+    
 }
