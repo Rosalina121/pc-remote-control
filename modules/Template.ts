@@ -20,8 +20,8 @@ import type { IModuleResponse } from "../interfaces/IModuleResponse";
  *  - /wish/template {"tbd":"happy day", "wip": "in hell"}
  */
 class Template implements IModule {
-    emoji = "📄"            // preferably https://gist.github.com/gurki/f5dae63795c17da2f33c3e6c5877ce30 
-    name = "Template";
+    emoji = "📄"            // if unsure consult https://gist.github.com/gurki/f5dae63795c17da2f33c3e6c5877ce30 
+    name = "Template";      // also for icon sometimes I add an extra space if it looks cramped in the terminal
     path = "template";      // kebab-case of the above
 
     fn(request: moduleReq): IModuleResponse {

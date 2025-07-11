@@ -15,7 +15,7 @@ import { $ } from "bun";
  * Example:
  *  - /wish/switch-audio?name=microphone
  *  - /wish/switch-audio?name=Desk%20Microphone
- *  - /wish/switch-audio {"name":"BT Sound Bar"}
+ *  - /wish/switch-audio {"device":"BT Sound Bar"}
  */
 class SwitchAudio implements IModule {
     emoji = "🎵";

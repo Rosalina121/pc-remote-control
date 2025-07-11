@@ -7,7 +7,7 @@ import { copy } from 'copy-paste/promises';
  *  - value - `string` value of clipboard text
  *
  * POST:
- *  - file - actual file to be saved (via Form)
+ *  - tbd?
  *
  * Example:
  *  - /wish/clipboard?value=i%20like%20trains

@@ -2,6 +2,9 @@ import type { IModule, moduleReq } from "../interfaces/IModule";
 import type { IModuleResponse } from "../interfaces/IModuleResponse";
 
 /**
+ * Frankly all the logic for this is in index.ts anyways.
+ * May refactor this someday, but no need for now.
+ * 
  * POST:
  *  - file - actual file to be saved (via Form)
  *

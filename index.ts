@@ -7,7 +7,7 @@ import express from "express";
 import type { Response } from "express-serve-static-core";
 import multer from "multer";
 
-import { red, yellow, green, lightRed, white, blue, cyan } from "kolorist";
+import { red, yellow, green, lightRed, white, blue, cyan } from "kolorist"; // seems easier than escape codes
 
 import config from "./config.json";
 
@@ -38,6 +38,7 @@ async function loadClasses(dir: string): Promise<{ module: IModule }[]> {
         )
     );
     // TODO: validate duplicate paths
+    // TOdO: error handling
     return classes;
 }
 
@@ -47,6 +48,7 @@ function colorForStatus(status: number, text: string): string {
     } else if (status >= 400) {
         return yellow(text);
     } else {
+        // If you want to use blue for status 100 go ahead, I haven't found any use for it just yet, so this case is basically always 200
         return green(text);
     }
 }
