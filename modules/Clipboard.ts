@@ -1,8 +1,7 @@
 import type { IModule, moduleReq } from "../interfaces/IModule";
 import type { IModuleResponse } from "../interfaces/IModuleResponse";
 
-import clipboard from "clipboardy";
-
+import { copy } from 'copy-paste/promises';
 /**
  * GET:
  *  - value - `string` value of clipboard text
@@ -18,7 +17,7 @@ class Clipboard implements IModule {
     name = "Clipboard";
     path = "clipboard";
 
-    fn(request: moduleReq): IModuleResponse {
+    async fn(request: moduleReq): Promise<IModuleResponse> {
         switch (request.method) {
             case "POST":
                 return {
@@ -36,10 +35,10 @@ class Clipboard implements IModule {
     }
 }
 
-function handleGET(request: moduleReq) {
+async function handleGET(request: moduleReq) {
     const value = request.query?.value;
     if (value) {
-        clipboard.writeSync(value.toString());
+        await copy(value.toString());
         return { response: `Clipboard written: "${value}"`, status: 200 };
     } else {
         return {

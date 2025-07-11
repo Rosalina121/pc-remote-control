@@ -34,7 +34,7 @@ async function loadClasses(dir: string): Promise<{ module: IModule }[]> {
         blue(
             `${classes
                 .map((c) => c.module.emoji + " " + c.module.name)
-                .join(white(","))}`
+                .join(white(", "))}`
         )
     );
     // TODO: validate duplicate paths
@@ -64,7 +64,7 @@ async function main() {
     // multer stuff
     const storage = multer.diskStorage({
         destination: function (req, file, callback) {
-            callback(null, config.uploadsPath); // Upload folder. Change to yours
+            callback(null, path.join(config.uploadsPath)); // Upload folder. Change to yours
         },
         filename: function (req, file, callback) {
             callback(null, file.originalname);
